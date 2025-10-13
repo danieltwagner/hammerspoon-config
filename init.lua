@@ -32,6 +32,7 @@ spoon.SpoonInstall:andUse("Caffeine", { start = true })
 spoon.SpoonInstall:andUse("PushToTalk", {
   start = true,
   config = {
+    defaultState = 'push-to-talk',
     app_switcher = { ['zoom.us'] = 'push-to-talk' }
   }
 })

@@ -45,7 +45,6 @@ obj.app_switcher = {}
 obj.detect_on_start = false
 
 local function showState()
-    local device = hs.audiodevice.defaultInputDevice()
     local muted = false
     if obj.state == 'unmute' then
         obj.menubar:setIcon(hs.spoons.resourcePath("speak.pdf"))
@@ -68,7 +67,11 @@ local function showState()
         end
     end
 
-    device:setMuted(muted)
+    -- Mute/unmute all input devices
+    local devices = hs.audiodevice.allInputDevices()
+    for _, device in pairs(devices) do
+        device:setMuted(muted)
+    end
 end
 
 function obj.setState(s)
@@ -95,7 +98,6 @@ local function appWatcher(appName, eventType, appObject)
 end
 
 local function eventTapWatcher(event)
-    device = hs.audiodevice.defaultInputDevice()
     if event:getFlags()['fn'] then
         obj.pushed = true
     else
@@ -137,7 +139,13 @@ function obj:start()
 
     obj.menubar = hs.menubar.new()
     obj.menubar:setMenu(obj.menutable)
-    if obj.detect_on_start then obj.state = initialState() end
+
+    if obj.detect_on_start then
+        obj.state = initialState()
+    else
+        obj.state = obj.defaultState
+    end
+
     obj.setState(obj.state)
 end
 
