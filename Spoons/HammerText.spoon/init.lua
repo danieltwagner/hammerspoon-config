@@ -92,6 +92,7 @@ function expander()
         -- if one of these "navigational" keys is pressed
         if keyCode == keyMap["return"]
         or keyCode == keyMap["space"]
+        or keyCode == keyMap["tab"]
         or keyCode == keyMap["up"]
         or keyCode == keyMap["down"]
         or keyCode == keyMap["left"]
@@ -101,21 +102,26 @@ function expander()
 
         obj.logger.df("Word to check if hotstring: %s", word)
 
-        -- finally, if "word" is a hotstring
-        local output = obj.keywords[word]
+        -- suffix-match: the buffer may contain stale chars from before the keyword
+        -- (e.g. clicking into a new field doesn't clear it), so check the tail
+        local matchedKeyword = nil
+        local output = nil
+        for kw, val in pairs(obj.keywords) do
+            if word:sub(-#kw) == kw then
+                matchedKeyword = kw
+                output = val
+                break
+            end
+        end
         if type(output) == "function" then -- expand if function
           local _, o = pcall(output)
           if not _ then
-            obj.logger.ef("~~ expansion for '" .. word .. "' gave an error of " .. o)
-            -- could also set o to nil here so that the expansion doesn't occur below, but I think
-            -- seeing the error as the replacement will be a little more obvious that a print to the
-            -- console which I may or may not have open at the time...
-            -- maybe show an alert with hs.alert instead?
+            obj.logger.ef("~~ expansion for '" .. matchedKeyword .. "' gave an error of " .. o)
           end
           output = o
         end
         if output then
-            for i = 1, utf8.len(word), 1 do hs.eventtap.keyStroke({}, "delete", 0) end -- delete the abbreviation
+            for i = 1, utf8.len(matchedKeyword), 1 do hs.eventtap.keyStroke({}, "delete", 0) end -- delete the abbreviation
             hs.eventtap.keyStrokes(output) -- expand the word
             word = "" -- clear the buffer
         end
