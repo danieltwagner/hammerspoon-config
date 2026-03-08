@@ -122,10 +122,11 @@ function expander()
         end
         if output then
             keyWatcher:stop() -- stop listening so synthetic keystrokes don't re-trigger
-            for i = 1, utf8.len(matchedKeyword), 1 do hs.eventtap.keyStroke({}, "delete", 0) end -- delete the abbreviation
+            for i = 1, utf8.len(matchedKeyword) - 1, 1 do hs.eventtap.keyStroke({}, "delete", 0) end -- delete the abbreviation (minus the triggering char we're about to consume)
             hs.eventtap.keyStrokes(output) -- expand the word
             word = "" -- clear the buffer
             hs.timer.doAfter(0.1, function() keyWatcher:start() end)
+            return true -- consume the triggering keystroke so it doesn't appear after the expansion
         end
 
         return false -- pass the event on to the application
