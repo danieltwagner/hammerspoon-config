@@ -56,7 +56,7 @@ spoon.Stay.logger.setLogLevel('debug')
 spoon.Stay:start()
 
 -- ControlEscape
-hs.loadSpoon('ControlEscape'):start() -- Load Hammerspoon bits from https://github.com/jasonrudolph/ControlEscape.spoon
+-- hs.loadSpoon('ControlEscape'):start() -- Load Hammerspoon bits from https://github.com/jasonrudolph/ControlEscape.spoon
 
 -- Text expansion
 ht = hs.loadSpoon("HammerText")
