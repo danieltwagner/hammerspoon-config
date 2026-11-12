@@ -55,6 +55,10 @@ hs.loadSpoon('Stay')
 spoon.Stay.logger.setLogLevel('debug')
 spoon.Stay:start()
 
+-- noTunes: keep Apple Music from launching
+hs.loadSpoon('NoTunes')
+spoon.NoTunes:start()
+
 -- ControlEscape
 -- hs.loadSpoon('ControlEscape'):start() -- Load Hammerspoon bits from https://github.com/jasonrudolph/ControlEscape.spoon
 
